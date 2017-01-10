@@ -15,10 +15,12 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from setuptools import setup
+import versioneer
 
 setup(
+    cmdclass=versioneer.get_cmdclass(),
     name='pysor',
-    version='0.0.0',
+    version=versioneer.get_version(),
     description="Solve Poisson's equation with successive over-relaxation",
     classifiers=[
         'Development Status :: 1 - Planning',

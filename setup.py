@@ -16,9 +16,26 @@
 
 from setuptools import setup
 import versioneer
+import sys
+
+def get_cmdclass():
+    versioneer_cmds = versioneer.get_cmdclass()
+    from setuptools.command.test import test as TestCommand
+    class PyTest(TestCommand):
+        user_options = [('pytest-args=', 'a', "Arguments to pass to py.test")]
+        def initialize_options(self):
+            TestCommand.initialize_options(self)
+            self.pytest_args = ['pysor']
+        def run_tests(self):
+            # import here, cause outside the eggs aren't loaded
+            import pytest
+            errno = pytest.main(self.pytest_args)
+            sys.exit(errno)
+    versioneer_cmds['test'] = PyTest
+    return versioneer_cmds
 
 setup(
-    cmdclass=versioneer.get_cmdclass(),
+    cmdclass=get_cmdclass(),
     name='pysor',
     version=versioneer.get_version(),
     description="Solve Poisson's equation with successive over-relaxation",
@@ -42,4 +59,5 @@ setup(
     author='Christoph Wehmeyer',
     author_email='christoph.wehmeyer@fu-berlin.de',
     license='GPLv3+',
-    packages=['pysor'])
+    packages=['pysor'],
+    tests_require=['pytest'])

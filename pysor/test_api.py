@@ -16,6 +16,29 @@
 
 import numpy as np
 from .api import sor
+from .api import laplacian
+from numpy.testing import assert_array_equal
+
+def test_laplacian_1d():
+    from .laplacian import laplacian_1d
+    n = np.random.randint(2, 10)
+    assert_array_equal(
+        laplacian(n, 1),
+        laplacian_1d(n))
+
+def test_laplacian_2d():
+    from .laplacian import laplacian_2d
+    n = np.random.randint(2, 10)
+    assert_array_equal(
+        laplacian(n, 2),
+        laplacian_2d(n))
+
+def test_laplacian_3d():
+    from .laplacian import laplacian_3d
+    n = np.random.randint(2, 10)
+    assert_array_equal(
+        laplacian(n, 3),
+        laplacian_3d(n))
 
 def test_sor_callable():
     assert False

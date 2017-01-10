@@ -18,3 +18,31 @@ import numpy as np
 
 def sor(rho, h, epsilon=1.0, maxiter=1000, maxerr=1.0E-7, w=None):
     pass
+
+def laplacian(n, dim):
+    r"""The dim-D Laplace operator independent of the grid spacing.
+    
+    Parameters
+    ----------
+    n : int
+        The number of grid points along each axis.
+    dim : int
+        The number of axes; allowed are the values 1, 2, and 3.
+    
+    Returns
+    -------
+    numpy.ndarray(shape=(n^dim, n^dim), dtype=numpy.float64)
+        The Laplace operator matrix.
+    
+    """
+    if dim == 1:
+        from .laplacian import laplacian_1d
+        return laplacian_1d(n)
+    elif dim == 2:
+        from .laplacian import laplacian_2d
+        return laplacian_2d(n)
+    elif dim == 3:
+        from .laplacian import laplacian_3d
+        return laplacian_3d(n)
+    else:
+        raise ValueError("dim must be 1, 2, 3; got %d" % dim)

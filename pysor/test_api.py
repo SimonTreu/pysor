@@ -18,6 +18,7 @@ import numpy as np
 from .api import sor
 from .api import laplacian
 from numpy.testing import assert_array_equal
+from numpy.testing import assert_array_almost_equal
 
 def test_laplacian_1d():
     from .laplacian import laplacian_1d
@@ -40,5 +41,39 @@ def test_laplacian_3d():
         laplacian(n, 3),
         laplacian_3d(n))
 
-def test_sor_callable():
-    assert False
+#   These tests compute phi vor SOR and compute rho back via a matrix vector
+#   product with the corresponding laplacian. If the computed rho is close
+#   enough to the original rho, the test ist passed.
+
+def check_poisson_consistency(rho, h):
+    assert_array_almost_equal(
+        np.dot(
+            laplacian(rho.shape[0], rho.ndim),
+            sor(rho, h).reshape((-1,))).reshape(rho.shape),
+        h**2 * (-rho),
+        decimal=4)
+
+def test_sor_1d_random():
+    n = np.random.randint(100, 200)
+    g = np.linspace(0, 1, n, endpoint=False)
+    rho = np.exp((-100.0) * (g - 0.3)**2) - np.exp((-100.0) * (g - 0.7)**2)
+    rho -= rho.mean()
+    check_poisson_consistency(rho, g[1] - g[0])
+
+def test_sor_2d_random():
+    n = np.random.randint(50, 100)
+    g = np.linspace(0, 1, n, endpoint=False)
+    x, y = np.meshgrid(g, g)
+    rho = np.exp((-100.0) * ((x - 0.3)**2) + (y - 0.3)**2) \
+        - np.exp((-100.0) * ((x - 0.7)**2) + (y - 0.7)**2)
+    rho -= rho.mean()
+    check_poisson_consistency(rho, g[1] - g[0])
+
+def test_sor_3d_random():
+    n = np.random.randint(10, 20)
+    g = np.linspace(0, 1, n, endpoint=False)
+    x, y, z = np.meshgrid(g, g, g)
+    rho = np.exp((-100.0) * ((x - 0.3)**2) + (y - 0.3)**2 + (z - 0.3)**2) \
+        - np.exp((-100.0) * ((x - 0.7)**2) + (y - 0.7)**2 + (z - 0.7)**2)
+    rho -= rho.mean()
+    check_poisson_consistency(rho, g[1] - g[0])

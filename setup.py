@@ -82,7 +82,7 @@ setup(
     version=versioneer.get_version(),
     description="Solve Poisson's equation with successive over-relaxation",
     classifiers=[
-        'Development Status :: 1 - Planning',
+        'Development Status :: 3 - Alpha',
         'Environment :: Console',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
@@ -96,7 +96,10 @@ setup(
         'Topic :: Scientific/Engineering :: Chemistry',
         'Topic :: Scientific/Engineering :: Mathematics',
         'Topic :: Scientific/Engineering :: Physics'],
-    keywords=[],
+    keywords=[
+        'poisson equation',
+        'sor',
+        'successive over-relaxation'],
     url='https://github.com/cwehmeyer/pysor',
     author='Christoph Wehmeyer',
     author_email='christoph.wehmeyer@fu-berlin.de',

@@ -15,6 +15,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
+import fast_sor as fs
 import naive_sor as ns
 import laplacian as lp
 
@@ -48,7 +49,17 @@ def sor(rho, h, epsilon=1.0, maxiter=1000, maxerr=1.0E-7, w=None, fast=True):
     rho = np.asarray(rho, dtype=np.float64)
     dim = rho.ndim
     if fast:
-        raise NotImplementedError()
+        phi = np.zeros(shape=rho.shape, dtype=rho.dtype)
+        if w is None:
+            w = 2.0 / (1.0 + np.pi / float(rho.shape[0]))
+        if dim == 1:
+            return fs.sor_1d(phi, rho, w, h / epsilon, maxiter, maxerr)
+        elif dim == 2:
+            return fs.sor_2d(phi, rho, w, h * h / epsilon, maxiter, maxerr)
+        elif dim == 3:
+            return fs.sor_3d(phi, rho, w, h * h * h / epsilon, maxiter, maxerr)
+        else:
+            raise ValueError("dimensionality must be 1, 2, 3; got %d" % dim)
     else:
         if dim == 1:
             return ns.sor_1d(rho, h, epsilon=epsilon, maxiter=maxiter, maxerr=maxerr, w=w)

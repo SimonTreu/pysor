@@ -88,7 +88,7 @@ def test_sor_1d_random_fast():
     assert_array_almost_equal(
         sor(rho, g[1] - g[0], maxiter=100000, maxerr=1.0E-10, fast=True),
         sor(rho, g[1] - g[0], maxiter=100000, maxerr=1.0E-10, fast=False),
-        decimal=10)
+        decimal=12)
 
 def test_sor_2d_random_fast():
     n = np.random.randint(50, 100)
@@ -100,7 +100,7 @@ def test_sor_2d_random_fast():
     assert_array_almost_equal(
         sor(rho, g[1] - g[0], maxiter=100000, maxerr=1.0E-10, fast=True),
         sor(rho, g[1] - g[0], maxiter=100000, maxerr=1.0E-10, fast=False),
-        decimal=10)
+        decimal=12)
 
 def test_sor_3d_random_fast():
     n = np.random.randint(10, 15)
@@ -112,4 +112,4 @@ def test_sor_3d_random_fast():
     assert_array_almost_equal(
         sor(rho, g[1] - g[0], maxiter=100000, maxerr=1.0E-10, fast=True),
         sor(rho, g[1] - g[0], maxiter=100000, maxerr=1.0E-10, fast=False),
-        decimal=10)
+        decimal=12)

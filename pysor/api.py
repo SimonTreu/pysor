@@ -18,17 +18,20 @@ import numpy as np
 import naive_sor as ns
 import laplacian as lp
 
-def sor(rho, h, epsilon=1.0, maxiter=1000, maxerr=1.0E-7, w=None):
+def sor(rho, h, epsilon=1.0, maxiter=1000, maxerr=1.0E-7, w=None, fast=True):
     rho = np.asarray(rho, dtype=np.float64)
     dim = rho.ndim
-    if dim == 1:
-        return ns.sor_1d(rho, h, epsilon=epsilon, maxiter=maxiter, maxerr=maxerr, w=w)
-    elif dim == 2:
-        return ns.sor_2d(rho, h, epsilon=epsilon, maxiter=maxiter, maxerr=maxerr, w=w)
-    elif dim == 3:
-        return ns.sor_3d(rho, h, epsilon=epsilon, maxiter=maxiter, maxerr=maxerr, w=w)
+    if fast:
+        raise NotImplementedError()
     else:
-        raise ValueError("dimensionality must be 1, 2, 3; got %d" % dim)
+        if dim == 1:
+            return ns.sor_1d(rho, h, epsilon=epsilon, maxiter=maxiter, maxerr=maxerr, w=w)
+        elif dim == 2:
+            return ns.sor_2d(rho, h, epsilon=epsilon, maxiter=maxiter, maxerr=maxerr, w=w)
+        elif dim == 3:
+            return ns.sor_3d(rho, h, epsilon=epsilon, maxiter=maxiter, maxerr=maxerr, w=w)
+        else:
+            raise ValueError("dimensionality must be 1, 2, 3; got %d" % dim)
 
 def laplacian(n, dim):
     r"""The dim-D Laplace operator independent of the grid spacing.

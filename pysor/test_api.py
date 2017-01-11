@@ -49,18 +49,18 @@ def check_poisson_consistency(rho, h, maxiter, maxerr):
     assert_array_almost_equal(
         np.dot(
             laplacian(rho.shape[0], rho.ndim),
-            sor(rho, h, maxiter=maxiter, maxerr=maxerr).reshape((-1,))).reshape(rho.shape),
+            sor(rho, h, maxiter=maxiter, maxerr=maxerr, fast=False).reshape((-1,))).reshape(rho.shape),
         h**rho.ndim * (-rho),
         decimal=4)
 
-def test_sor_1d_random():
+def test_sor_1d_random_naive():
     n = np.random.randint(100, 200)
     g = np.linspace(0, 1, n, endpoint=False)
     rho = np.exp((-100.0) * (g - 0.3)**2) - np.exp((-100.0) * (g - 0.7)**2)
     rho -= rho.mean()
     check_poisson_consistency(rho, g[1] - g[0], 100000, 1.0E-10)
 
-def test_sor_2d_random():
+def test_sor_2d_random_naive():
     n = np.random.randint(50, 100)
     g = np.linspace(0, 1, n, endpoint=False)
     x, y = np.meshgrid(g, g)
@@ -69,7 +69,7 @@ def test_sor_2d_random():
     rho -= rho.mean()
     check_poisson_consistency(rho, g[1] - g[0], 100000, 1.0E-10)
 
-def test_sor_3d_random():
+def test_sor_3d_random_naive():
     n = np.random.randint(10, 20)
     g = np.linspace(0, 1, n, endpoint=False)
     x, y, z = np.meshgrid(g, g, g)
@@ -77,3 +77,36 @@ def test_sor_3d_random():
         - np.exp((-100.0) * ((x - 0.7)**2) + (y - 0.7)**2 + (z - 0.7)**2)
     rho -= rho.mean()
     check_poisson_consistency(rho, g[1] - g[0], 100000, 1.0E-10)
+
+#   These tests compare the fast version with the tested naive implementation
+
+def test_sor_1d_random_fast():
+    n = np.random.randint(100, 200)
+    g = np.linspace(0, 1, n, endpoint=False)
+    rho = np.exp((-100.0) * (g - 0.3)**2) - np.exp((-100.0) * (g - 0.7)**2)
+    rho -= rho.mean()
+    assert_array_almost_equal(
+        sor(rho, g[1] - g[0], maxiter=100000, maxerr=1.0E-10, fast=True),
+        sor(rho, g[1] - g[0], maxiter=100000, maxerr=1.0E-10, fast=False))
+
+def test_sor_2d_random_fast():
+    n = np.random.randint(50, 100)
+    g = np.linspace(0, 1, n, endpoint=False)
+    x, y = np.meshgrid(g, g)
+    rho = np.exp((-100.0) * ((x - 0.3)**2) + (y - 0.3)**2) \
+        - np.exp((-100.0) * ((x - 0.7)**2) + (y - 0.7)**2)
+    rho -= rho.mean()
+    assert_array_almost_equal(
+        sor(rho, g[1] - g[0], maxiter=100000, maxerr=1.0E-10, fast=True),
+        sor(rho, g[1] - g[0], maxiter=100000, maxerr=1.0E-10, fast=False))
+
+def test_sor_3d_random_fast():
+    n = np.random.randint(10, 20)
+    g = np.linspace(0, 1, n, endpoint=False)
+    x, y, z = np.meshgrid(g, g, g)
+    rho = np.exp((-100.0) * ((x - 0.3)**2) + (y - 0.3)**2 + (z - 0.3)**2) \
+        - np.exp((-100.0) * ((x - 0.7)**2) + (y - 0.7)**2 + (z - 0.7)**2)
+    rho -= rho.mean()
+    assert_array_almost_equal(
+        sor(rho, g[1] - g[0], maxiter=100000, maxerr=1.0E-10, fast=True),
+        sor(rho, g[1] - g[0], maxiter=100000, maxerr=1.0E-10, fast=False))

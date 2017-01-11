@@ -19,6 +19,32 @@ import naive_sor as ns
 import laplacian as lp
 
 def sor(rho, h, epsilon=1.0, maxiter=1000, maxerr=1.0E-7, w=None, fast=True):
+    r"""Solve the dim-D Poisson equation using the successive overrelaxation method.
+
+    Parameters
+    ----------
+    rho : numpy.ndarray() or arraylike of float
+        The charge density grid; allowed shapes are (n,), (n, n), and (n, n, n).
+    h : float
+        The grid spacing along each axis.
+    epsilon : float, optional, default=1.0
+        The vacuum permittivity.
+    maxerr : float, optional, default=1.eE-8
+        The convergence criterion.
+    maxiter : int, optional, default=1000
+        The number of iterations.
+    w : float, optional, default=None
+        Overwrite the automatically computed SOR parameter.
+    fast : boolean, optional, default=True
+        Use a fast version of the SOR code instead of a slow but simple
+        reference implementation.
+
+    Returns
+    -------
+    numpy.ndarray(shape=rho.shape, dtype=rho.dtype)
+        The potential grid.
+
+    """
     rho = np.asarray(rho, dtype=np.float64)
     dim = rho.ndim
     if fast:

@@ -1,2 +1,7 @@
+include LICENSE
+
 include versioneer.py
 include pysor/_version.py
+
+# include extension code
+recursive-include pysor/_ext *.pyx *.c *.h

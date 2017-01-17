@@ -1,5 +1,5 @@
 # Individual files
-ext/fast_sor.c
+pysor/_ext/fast_sor.c
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

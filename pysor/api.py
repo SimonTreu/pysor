@@ -15,7 +15,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
-import fast_sor as fs
+import _ext.fast_sor as fs
 import naive_sor as ns
 import laplacian as lp
 

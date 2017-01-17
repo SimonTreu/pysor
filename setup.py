@@ -37,8 +37,8 @@ def extensions():
     from numpy import get_include
     from Cython.Build import cythonize
     ext_fast_sor = Extension(
-        "pysor.fast_sor",
-        sources=["ext/fast_sor.pyx", "ext/src_fast_sor.c"],
+        "pysor._ext.fast_sor",
+        sources=["pysor/_ext/fast_sor.pyx", "pysor/_ext/src_fast_sor.c"],
         include_dirs=[get_include()],
         extra_compile_args=["-O3", "-std=c99"])
     exts = [ext_fast_sor]
@@ -91,7 +91,6 @@ setup(
         'Operating System :: POSIX',
         'Operating System :: Microsoft :: Windows',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Topic :: Scientific/Engineering :: Chemistry',
         'Topic :: Scientific/Engineering :: Mathematics',
@@ -104,6 +103,12 @@ setup(
     author='Christoph Wehmeyer',
     author_email='christoph.wehmeyer@fu-berlin.de',
     license='GPLv3+',
-    packages=['pysor'],
-    install_requires=['numpy>=1.7.0', 'cython>=0.22'],
+    packages=[
+        'pysor',
+        'pysor._ext'],
+    setup_requires=[
+        'numpy>=1.7.0',
+        'cython>=0.22',
+        'setuptools>=0.6'],
+    install_requires=['numpy>=1.7.0'],
     tests_require=['pytest'])
